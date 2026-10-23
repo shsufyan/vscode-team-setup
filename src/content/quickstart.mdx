@@ -1,47 +1,68 @@
 ---
 title: Quickstart
-description: Guide a new reader through one useful workflow and show them how to verify it.
+description: Install VS Code, open a project, and run and debug a script in about ten minutes.
 ---
 
-A strong quickstart produces one meaningful result. Replace the placeholders
-below with the shortest supported path for your product.
+# Quickstart
 
-## Before you begin
+By the end of this page you will have opened a project in VS Code, run a
+script from the integrated terminal, and stopped on a breakpoint.
 
-List only the requirements needed for this workflow:
+## Prerequisites
 
-- An account or credential, when required
-- A supported runtime, device, browser, or operating system
-- Permission to create or change the resource used in the example
+- Node.js installed (check with `node --version`)
 
-<Steps>
-  <Step title="Install the required tool">
-    Give readers one recommended installation command.
+## Install VS Code
 
-    ```bash
-    npm install your-package
-    ```
-  </Step>
-  <Step title="Add the minimum configuration">
-    Include only the values needed for the first successful run.
+Download the installer for your operating system from the official VS Code
+website and run it. On Windows, leave the option to add VS Code to your
+PATH selected.
 
-    ```bash
-    your-cli init
-    ```
-  </Step>
-  <Step title="Complete the first task">
-    Use a realistic example that produces an observable result.
+## Open a project folder
 
-    ```bash
-    your-cli start
-    ```
-  </Step>
-  <Step title="Verify the result">
-    State exactly what the reader should see and how to recover when it does not appear.
-  </Step>
-</Steps>
+```bash
+mkdir hello-vscode
+cd hello-vscode
+code .
+```
 
-## Choose the next task
+If `code` isn't recognized, see [Troubleshooting](#troubleshooting).
 
-Link to the guide that naturally follows this result. Avoid ending the reader’s
-journey with a generic list of every feature.
+## Create and run a script
+
+Create a file named `hello.js`:
+
+```javascript
+const names = ["Asha", "Ravi", "Meera"];
+
+for (const name of names) {
+  const greeting = `Hello, ${name}!`;
+  console.log(greeting);
+}
+```
+
+Open the integrated terminal and run it:
+
+```bash
+node hello.js
+```
+
+## Debug the script
+
+1. Click in the gutter left of the line `const greeting = ...` to set a breakpoint.
+2. Press **F5** and, if prompted, choose Node.js.
+3. Execution stops at the breakpoint. Inspect `name` in the **Variables** panel.
+4. Press **F5** again to continue.
+
+## Open the Command Palette
+
+Press `Ctrl+Shift+P` (`Cmd+Shift+P` on macOS). Almost every VS Code
+action is available here, so you don't need to memorize menus.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| `code: command not found` (macOS) | Shell command not installed | Open the Command Palette and run **Shell Command: Install 'code' command in PATH**, then restart the terminal |
+| `code` not recognized (Windows) | PATH option was cleared during install | Reinstall and keep the PATH option, or add the install folder to PATH manually |
+| F5 does nothing | No debuggable file active | Make sure `hello.js` is the active editor tab |

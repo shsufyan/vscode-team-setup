@@ -1,0 +1,158 @@
+---
+title: Building this site with Thally Cloud
+description: End-to-end walkthrough of creating and publishing this documentation site on Thally Cloud.
+---
+
+# Build a documentation site with Thally: a walkthrough using VS Code as the subject
+
+By Shaikh Hussain Sufyan
+
+This article shows you how to build and publish a small documentation site with Thally Cloud. The example project is **VS Code Team Setup**, an unofficial, task-focused guide to setting up Visual Studio Code for yourself and your team. The same steps work for any developer tool you know well.
+
+By the end, you will have a live site at a `thally.app` address, a GitHub repository you own, and a workflow that redeploys the site on every push.
+
+## Prerequisites
+
+You need:
+
+- **A Thally Cloud account.** Sign up at app.thally.io.
+- **A GitHub account with app-install rights.** You must be able to install or approve the Thally GitHub App for the account or organization that will own the documentation repository.
+- **Node.js for local `check` and `build`.** You do not need Node.js to publish the starter site, but you need it to validate and build changes before you push them.
+
+Check your Node.js installation:
+
+```bash
+node --version
+```
+
+Two account details are worth knowing before you publish. A new workspace gets a one-time 7-day Cloud trial, and each workspace has a limit on active managed sites. If a workspace is at its limit, an owner can add capacity or delete another Cloud site, which does not delete that site's GitHub repository or documentation files.
+
+## Setup
+
+Setup happens in the Thally Cloud wizard.
+
+1. Go to app.thally.io, sign in, and select **Create a site**.
+2. Enter the site name (`VS Code Team Setup`), an optional description, and the `thally.app` address you want. Thally checks the address before you continue.
+3. Under **Docs source**, choose **Create a new docs repository**. Thally creates a GitHub repository from its verified starter release and manages the first deployment.
+4. Install the Thally GitHub App and choose **All repositories**.
+5. Under **Product sources**, choose **I'll do this later**, because this site has no product repository for Thally Track to watch. Skip **Knowledge surfaces** if the step appears.
+6. Review the details and select **Publish site**.
+
+### Why the fresh-repository path needs All repositories
+
+The Thally quickstart states that the fresh-repository path requires **All repositories** access so the app can initialize the repository it creates. In other words, the repository does not exist until Thally makes it, so the app needs account-wide access to create and set it up.
+
+If your organization requires selected-repository access, the alternative is to use an existing compatible Thally repository and grant the app access to that repository only.
+
+Thally saves the setup before background work starts, so you can return to the workspace Home page to follow progress without creating a second site. When publishing finishes, the Home page shows the site as **Live**, and **View live site** opens it.
+
+## Configuration
+
+Clone the repository shown in the site summary:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
+cd YOUR-REPOSITORY
+```
+
+Three files control most of the site:
+
+| File | What it controls |
+| --- | --- |
+| `src/data/site.ts` | Product name, description, links, and versioned brand defaults |
+| `docs.json` | Tabs, sidebar groups, page order, and optional features |
+| `src/content/*.mdx` | Page content and frontmatter |
+
+**site.ts.** Update this file first so the header and metadata describe your project instead of the starter content. For this site, that means setting the product name to VS Code Team Setup and writing a one-line description.
+
+**docs.json and the sidebar.** I grouped the sidebar by reader task rather than by feature:
+
+| Sidebar group | Pages | Reader task |
+| --- | --- | --- |
+| Get started | Introduction, Quickstart | Understand the site and reach a first result |
+| Guides | Share a team setup | Complete one practical task |
+
+List only pages that exist. A navigation entry that points to a missing page is something to avoid, and the validation step in the next sections is where you catch it.
+
+## Content creation
+
+Every page is an MDX file in `src/content`, and each begins with frontmatter:
+
+```mdx
+---
+title: Quickstart
+description: Install VS Code, open a project, and run and debug a script in about ten minutes.
+---
+
+# Quickstart
+
+By the end of this page you will have stopped on a breakpoint.
+```
+
+The site has three pages, each with a single job:
+
+- **Introduction:** what VS Code is, who the site is for, and where to start.
+- **Quickstart:** install VS Code, open a project folder, run a script, and stop on a breakpoint.
+- **Guide:** commit `.vscode/settings.json` and `.vscode/extensions.json` so every teammate gets the same editor behavior.
+
+Use fenced code blocks with a language tag, and show expected output in a separate `text` block:
+
+```bash
+node hello.js
+```
+
+```text
+Hello, Asha!
+```
+
+Use a table to keep failure cases scannable. One row per symptom works well:
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| `code: command not found` (macOS) | Shell command not installed | Run **Shell Command: Install 'code' command in PATH** from the Command Palette, then restart the terminal |
+| Format on save does nothing | No formatter extension installed | Install the extension named in `editor.defaultFormatter` |
+
+Run every command yourself before you publish, and use the real output in your pages.
+
+## Publishing
+
+Validate and build locally before every push:
+
+```bash
+npx --yes @thallylabs/cli@latest check
+npm run build
+```
+
+The `check` command reports content and configuration problems, and `build` confirms the whole site compiles. Fix any errors your changes caused, then repeat until both succeed.
+
+Commit and push to the production branch connected in Thally Cloud:
+
+```bash
+git add .
+git commit -m "Add quickstart and team setup guide"
+git push
+```
+
+The push starts a new managed deployment, and the deployment history records the commit. To verify the result:
+
+1. Open the workspace Home page and wait for the deployment to finish.
+2. Load your live `thally.app` address.
+3. Confirm the new pages and sidebar groups appear.
+4. If the content looks stale, compare the commit SHA in the deployment history with the commit you pushed.
+
+## Things to know before you start
+
+These are the constraints the Thally documentation describes, which are worth planning around:
+
+| Constraint | What to do |
+| --- | --- |
+| The fresh-repository path needs **All repositories** access | Install the app on an account where that is acceptable, or use an existing compatible Thally repository with access limited to it |
+| One-time 7-day trial and an active-site limit | Review the managed-site capacity notes before you publish another site |
+| Navigation can reference pages that do not exist | Run `check` and `build` before every push |
+| A live site that looks stale after a push | Check the deployment status and commit SHA before changing anything else |
+
+## Next steps
+
+- Add a second guide, such as debugging configuration with `launch.json`.
+- Customize the colors, logo, and footer to match your project.
+- Connect an AI coding agent to update pages or audit the site.
