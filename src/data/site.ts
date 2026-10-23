@@ -159,7 +159,7 @@ const brandPresets: Record<BrandPresetKey, BrandConfig> = {
 
 const brandPreset: BrandPresetKey = 'primary'
 
-export const siteConfig: SiteConfig = {
+const templateSiteConfig: SiteConfig = {
   name: 'Documentation',
   description:
     'Clear, task-focused guidance for building with the product.',
@@ -172,3 +172,17 @@ export const siteConfig: SiteConfig = {
   brandPreset,
   brandPresets,
 }
+
+// Managed by Thally Cloud onboarding.
+export const siteConfig: SiteConfig = {
+  ...templateSiteConfig,
+  name: "VS Code Team Setup",
+  description: "A setup for VS Code for the developers who are new to it, and Tech leads who want their team to share one consistent editor setup.",
+  repoUrl: "https://github.com/shsufyan/vscode-team-setup",
+  links: [
+    { label: "Get started", href: "/quickstart" },
+    { label: "Support", href: "https://github.com/shsufyan/vscode-team-setup/issues/new" },
+    { label: "GitHub", href: "https://github.com/shsufyan/vscode-team-setup" },
+    { label: "Changelog", href: "/changelog" },
+  ],
+};
