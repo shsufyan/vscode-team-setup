@@ -1,0 +1,59 @@
+---
+title: Share a team setup
+description: Commit workspace settings and recommended extensions so every teammate gets the same editor behavior.
+---
+
+# Share a team setup
+
+VS Code reads project-level configuration from a `.vscode` folder at the root
+of your repository. Commit it, and every teammate who opens the project gets
+the same defaults.
+
+## Add workspace settings
+
+Create `.vscode/settings.json`:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true
+}
+```
+
+Workspace settings override a user's personal settings for this project only.
+
+## Recommend extensions
+
+Create `.vscode/extensions.json`:
+
+```json
+{
+  "recommendations": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+}
+```
+
+When a teammate opens the folder, VS Code offers to install the recommended
+extensions that they don't have yet.
+
+## Install an extension from the command line
+
+```bash
+code --install-extension esbenp.prettier-vscode
+```
+
+## Commit the folder
+
+```bash
+git add .vscode/settings.json .vscode/extensions.json
+git commit -m "Add shared VS Code workspace configuration"
+```
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| Format on save does nothing | No formatter extension installed | Install the extension named in `editor.defaultFormatter` |
+| Setting seems ignored | A more specific setting wins | Check for a language-specific override in your user settings |
+| No extension prompt appears | Typo in `extensions.json`, or the prompt was dismissed | Check the file path and JSON syntax, or open the Extensions view and filter by **Recommended** |
